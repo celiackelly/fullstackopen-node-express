@@ -2,6 +2,9 @@ const express = require('express')
 const app = express()
 const PORT = 3001
 
+//Middleware, needed to parse HTTP POST requests
+app.use(express.json())
+
 app.listen(process.env.PORT || PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
@@ -49,12 +52,32 @@ app.get('/info', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    const entry = persons.find(entry => entry.id == id)
+    const id = Number(request.params.id)
+    const entry = persons.find(entry => entry.id === id)
     if (entry) {
-        persons = persons.filter(entry => entry.id != id)
+        persons = persons.filter(entry => entry.id !== id)
         response.status(204).end()
     } else {
         response.status(404).end()
     }
+})
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+
+    // if (!body) {
+    //     return response.status(400).json({
+    //         error: 'content missing'
+    //     })
+    // }
+
+    const randomId = Math.floor(Math.random() * 1000)
+    const newEntry = {
+        "id": randomId, 
+        "name": body.name, 
+        "number": body.number,  
+    }
+    console.log(newEntry)
+    persons.concat(newEntry)
+    response.json(newEntry)
 })
