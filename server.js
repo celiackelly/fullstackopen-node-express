@@ -1,10 +1,11 @@
 const express = require('express')
-const { brotliDecompress } = require('zlib')
 const app = express()
+const morgan = require('morgan')
 const PORT = 3001
 
 //Middleware, needed to parse HTTP POST requests
 app.use(express.json())
+app.use(morgan('tiny'))
 
 app.listen(process.env.PORT || PORT, () => {
     console.log(`Server running on port ${PORT}`)
@@ -90,3 +91,9 @@ app.post('/api/persons', (request, response) => {
     persons.concat(newEntry)
     response.json(newEntry)
 })
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+  }
+  
+app.use(unknownEndpoint)
