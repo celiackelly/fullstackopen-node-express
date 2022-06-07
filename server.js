@@ -13,7 +13,7 @@ morgan.token('json', (request, response) => {
 })
 
 // app.use(morgan('tiny'))
-app.use(morgan(':method :url :status :response-time :json'))
+app.use(morgan(':method :url :status :res[content-length] :response-time ms :json'))
 
 app.listen(process.env.PORT || PORT, () => {
     console.log(`Server running on port ${PORT}`)
