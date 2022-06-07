@@ -33,6 +33,16 @@ app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
 
+app.get('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    const entry = persons.find(entry => entry.id == id)
+    if (entry) {
+        response.json(entry)
+    } else {
+        response.status(404).end()
+    }
+})
+
 app.get('/info', (request, response) => {
     const dateTime = new Date()
     response.send(`<h2>Phonebook has info for ${persons.length} people.</h2><p>${dateTime}<p>`)
