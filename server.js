@@ -6,7 +6,7 @@ app.listen(process.env.PORT || PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
 
-const persons = [
+let persons = [
     { 
       "id": 1,
       "name": "Arto Hellas", 
@@ -48,3 +48,13 @@ app.get('/info', (request, response) => {
     response.send(`<h2>Phonebook has info for ${persons.length} people.</h2><p>${dateTime}<p>`)
 })
 
+app.delete('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    const entry = persons.find(entry => entry.id == id)
+    if (entry) {
+        persons = persons.filter(entry => entry.id != id)
+        response.status(204).end()
+    } else {
+        response.status(404).end()
+    }
+})
