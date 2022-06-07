@@ -5,7 +5,15 @@ const PORT = 3001
 
 //Middleware, needed to parse HTTP POST requests
 app.use(express.json())
-app.use(morgan('tiny'))
+
+morgan.token('json', (request, response) => {
+    if (request.method == 'POST') {
+        return JSON.stringify(request.body)
+    }
+})
+
+// app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :response-time :json'))
 
 app.listen(process.env.PORT || PORT, () => {
     console.log(`Server running on port ${PORT}`)
@@ -87,7 +95,6 @@ app.post('/api/persons', (request, response) => {
         "name": body.name, 
         "number": body.number,  
     }
-    console.log(newEntry)
     persons.concat(newEntry)
     response.json(newEntry)
 })
