@@ -1,4 +1,5 @@
 const express = require('express')
+const { brotliDecompress } = require('zlib')
 const app = express()
 const PORT = 3001
 
@@ -65,11 +66,19 @@ app.delete('/api/persons/:id', (request, response) => {
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
-    // if (!body) {
-    //     return response.status(400).json({
-    //         error: 'content missing'
-    //     })
-    // }
+    if (!body.name || !body.number) {
+        return response.status(400).json({
+            error: 'content missing'
+        })
+    } else if (persons.find(entry => entry.name === body.name)) {
+        return response.status(400).json({
+            error: 'name must be unique'
+        })
+    } else if (persons.find(entry => entry.number === body.number)) {
+        return response.status(400).json({
+            error: 'number must be unique'
+        })
+    }
 
     const randomId = Math.floor(Math.random() * 1000)
     const newEntry = {
